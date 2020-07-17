@@ -19,17 +19,17 @@ public class Main {
         Map<Long, Course> courseMap = connectionReader.jsonParser(jsonString);
 
 //        create plan
-        Map<Long, Course> plan  = connectionReader.createPlan(courseMap);
+//        Map<Long, Course> plan  = connectionReader.createPlan(courseMap);
 
         //convert plan to json
 
         //post json back to NU Sandbox
 //
-//        for (Long name: courseMap.keySet()){
-//            String key = name.toString();
-//            Course value = courseMap.get(name);
-//            System.out.println(value.toString());
-//        }
+        for (Long name: courseMap.keySet()){
+            String key = name.toString();
+            Course value = courseMap.get(name);
+            System.out.println(value.toString());
+        }
 
 
 //        for (Long name: plan.keySet()){
