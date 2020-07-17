@@ -8,6 +8,8 @@ public class Main {
 
 //        String jsonString = "{\"courses\":[{\"subject\":\"CS\",\"classId\":2800,\"prereqs\":{\"type\":\"and\",\"values\":[{\"type\":\"or\",\"values\":[{\"classId\":1800,\"subject\":\"CS\"},{\"classId\":1365,\"subject\":\"MATH\"}]},{\"classId\":2500,\"subject\":\"CS\"}]}}, {\"subject\":\"CS\",\"classId\":2510,\"prereqs\":{\"type\":\"and\",\"values\":[{\"classId\":2500,\"subject\":\"CS\"}]}}]}\n";
 
+        //harder
+//        String jsonString = "{\"courses\":[{\"subject\":\"CS\",\"classId\":4400,\"prereqs\":{\"type\":\"and\",\"values\":[{\"classId\":3500,\"subject\":\"CS\"},{\"type\":\"or\",\"values\":[{\"classId\":3000,\"subject\":\"CS\"}]}]}},{\"subject\":\"CS\",\"classId\":4500,\"prereqs\":{\"type\":\"and\",\"values\":[{\"classId\":3500,\"subject\":\"CS\"},{\"type\":\"or\",\"values\":[{\"classId\":1111,\"subject\":\"ENGW\"},{\"classId\":1102,\"subject\":\"ENGW\"}]}]}}\n" + "]}";
 //        String jsonString = "{\n" + "\"courses\": [\n" + "{\n" + "\"subject\": \"CS\",\n" + "\"classId\": 2500,\n" + "\"prereqs\": {\n" +
 //                "\"type\": \"and\",\n" + "\"values\": []\n" + "}\n" + "},\n" + "{\n" + "\"subject\": \"CS\",\n" +
 //                "\"classId\": 1800,\n" + "\"prereqs\": {\n" + "\"type\": \"and\",\n" + "\"values\": []\n" + "}\n" + "},\n" + "{\n" +
