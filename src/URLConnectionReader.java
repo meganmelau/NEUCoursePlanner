@@ -5,11 +5,11 @@ import org.json.simple.parser.ParseException;
 
 import java.net.*;
 import java.io.*;
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class URLConnectionReader {
     public String connectionReader(String URLString) throws Exception {
-
         URL sandboxURL = new URL(URLString);
         URLConnection connection = sandboxURL.openConnection();
         BufferedReader in = new BufferedReader(
@@ -45,16 +45,12 @@ public class URLConnectionReader {
                 // Has Reqs
                 else if (values.size() > 0) {
                     List<PreReq> preReqList = new ArrayList<>();
-                    //check if you can call .values again --> if true create multiprereq course
                     JSONObject obj = (JSONObject) values.get(0);
-//                  System.out.println(mainClassId  + " " +obj + " SINGLE " + (obj.get("classId") != null) + " " + "//MULTI " + (obj.get("values") != null));
-                    //SinglePreReq
+//                  //SinglePreReq
                     if (obj.get("classId") != null) {
-//                        Course preReq = this.createNoReqCourse(obj);
                         PreReq<Course> noReqPreReq = this.createNoReqPreReq(course);
                         preReqList.add(noReqPreReq);
                         //check for the case of another preReq JSONObj
-                        // ect obj = (JSONObject) values.get(1);
                         if (values.size() > 1) {
                             JSONObject secondObj = (JSONObject) values.get(1);
                             if (secondObj.get("type") != null) {
@@ -83,7 +79,7 @@ public class URLConnectionReader {
         return courseMap;
     }
 
-    public Course createNoReqCourse(JSONObject course) {
+    private Course createNoReqCourse(JSONObject course) {
         PreReq<Course> preReq = new PreReq("and", new ArrayList<>());
 
         String subject = (String) course.get("subject");
@@ -92,7 +88,7 @@ public class URLConnectionReader {
         return newCourse;
     }
 
-    public PreReq<Course>  createNoReqPreReq (JSONObject course) {
+    private PreReq<Course>  createNoReqPreReq (JSONObject course) {
         String type = "";
         List<Course> preReqList = new ArrayList<>();
         Course noReqCourse = this.createNoReqCourse(course);
@@ -101,7 +97,7 @@ public class URLConnectionReader {
         return  preReq;
     }
 
-    PreReq<Course> createSinglePreReqCourse(JSONArray values, String type) {
+    private PreReq<Course> createSinglePreReqCourse(JSONArray values, String type) {
         List<Course> preReqCourseList = new ArrayList<>();
         Iterator valuesIterator = values.iterator();
         while (valuesIterator.hasNext()) {
@@ -113,7 +109,7 @@ public class URLConnectionReader {
        return preReq;
     }
 
-    Course createMultiPreReqCourse(JSONArray arr, String innerType, String mainType, String mainSubject, Long mainClassId) {
+    private Course createMultiPreReqCourse(JSONArray arr, String innerType, String mainType, String mainSubject, Long mainClassId) {
         List<PreReq> singlePreReqList = new ArrayList<>();
         List<Course> courseList = new ArrayList<>();
         for (int arrIndex = 0; arrIndex < arr.size(); arrIndex++) {
@@ -127,104 +123,14 @@ public class URLConnectionReader {
         Course mainCourse = new Course(mainSubject, mainClassId, multiPreReq);
         return mainCourse;
     }
-
-    Map<Long, Course> createPlan(Map<Long, Course> courseList) {
-        SortedMap<Long, Course> plan = new TreeMap<Long, Course>();
-        //First Traversal: Take All Classes without PreReqs
-        for (Map.Entry mapElement : courseList.entrySet()) {
-            Long key = (Long) mapElement.getKey();
-            Course course = ((Course) mapElement.getValue());
-            //No PreReqs take it first!
-            if (course.getPreReq().getPreReqList().get(0) instanceof Course) {
-                plan.put(key, course);
-            }
-        }
-
-        //The rest of the courses with preReqs
-        for (Map.Entry mapElement : courseList.entrySet()) {
-            Long key = (Long) mapElement.getKey();
-            Course course = ((Course) mapElement.getValue());
-            //Have you Taken the PreReqs
-            //SinglePreReq
-            if (course.getPreReq() != null) {
-                PreReq<Course> coursePreReq = course.getPreReq();
-                Map<Long, Course> courseMap = this.putCourseInMap(course, coursePreReq, key);
-                plan.putAll(courseMap);
-            }
-            //MultiPreReq
-            else if (course.getPreReq() != null) {
-//               worry about and and or of multi
-//                if or just check for one
-//                 if and check for both plan.contains
-                PreReq<PreReq> multiPreReq = course.getPreReq();
-                List<PreReq> singlePreReqList = multiPreReq.getPreReqList();
-                for (PreReq<Course> singlePreReq : singlePreReqList) {
-                    Map<Long, Course> courseMap = this.putCourseInMap(course, singlePreReq, key);
-                    plan.putAll(courseMap);
-                }
-            } else {
-                System.out.println("failed " + course);
-            }
-        }
-        //if no solution send no solution
-        if (plan.size() != courseList.size()) {
-            plan = new TreeMap<>();
-        }
-        return plan;
-    }
-
-    Map<Long, Course> putCourseInMap(Course course, PreReq singlePreReq, Long key) {
-        SortedMap<Long, Course> plan = new TreeMap<Long, Course>();
-        List<Course> preReqCourses = singlePreReq.getPreReqList();
-        for (Course preReqCourse : preReqCourses) {
-            Long preReqId = preReqCourse.getClassId();
-            if (plan.containsKey(preReqId)) {
-                plan.put(key, course);
-            }
-        }
-        return plan;
-    }
-
-    List<Course> convertInnerPreReq(JSONArray jsonArray) {
-        List<Course> courseList = new ArrayList<>();
-        for (int i = 0; i < jsonArray.size(); i++) {
-            JSONObject courseObj = (JSONObject) jsonArray.get(i);
-            Course newCourse = this.createNoReqCourse(courseObj);
-            courseList.add(newCourse);
-        }
-        return courseList;
-    }
-
-    JSONObject convertToJSON(Map<Long, Course> plan) {
-        JSONObject json = new JSONObject();
-        json.put("name", "student");
-
-        JSONArray preReqs = new JSONArray();
-        JSONObject course = new JSONObject();
-        course.put("information", "test");
-        course.put("id", 3);
-        course.put("name", "course1");
-        preReqs.add(course);
-
-        json.put("plan", preReqs);
-// {"course":[{"id":3,"information":"test","name":"course1"}],"name":"student"}
-
-//        "values": [
-//        {
-//            "subject": "CS",
-//                "classId": 2500
+//
+//    List<Course> convertInnerPreReq(JSONArray jsonArray) {
+//        List<Course> courseList = new ArrayList<>();
+//        for (int i = 0; i < jsonArray.size(); i++) {
+//            JSONObject courseObj = (JSONObject) jsonArray.get(i);
+//            Course newCourse = this.createNoReqCourse(courseObj);
+//            courseList.add(newCourse);
 //        }
-//]
-
-
-        for (Long name : plan.keySet()) {
-            String key = name.toString();
-            Course value = plan.get(name);
-            value.getClassId();
-            value.getSubject();
-            PreReq p = value.getPreReq();
-
-        }
-        return json;
-    }
+//        return courseList;
+//    }
 }
