@@ -45,32 +45,35 @@ public class URLConnectionReader {
                 // Has Reqs
                 else if (values.size() > 0) {
                     List<PreReq> preReqList = new ArrayList<>();
-                    JSONObject obj = (JSONObject) values.get(0);
+                    for (int x = 0; x < values.size(); x++) {
+                        JSONObject obj = (JSONObject) values.get(x);
 //                  //SinglePreReq
-                    if (obj.get("classId") != null) {
-                        PreReq<Course> noReqPreReq = this.createNoReqPreReq(course);
-                        preReqList.add(noReqPreReq);
-                        //check for the case of another preReq JSONObj
-                        if (values.size() > 1) {
-                            JSONObject secondObj = (JSONObject) values.get(1);
-                            if (secondObj.get("type") != null) {
-                                String secondType = (String) secondObj.get("type");
-                                JSONArray secondValues = (JSONArray) secondObj.get("values");
-                                PreReq<Course> secondPreReq = this.createSinglePreReqCourse(secondValues, secondType);
-                                preReqList.add(secondPreReq);
+                        if (obj.get("classId") != null) {
+                            PreReq<Course> noReqPreReq = this.createNoReqPreReq(obj);
+                            preReqList.add(noReqPreReq);
+                            //check for the case of another preReq JSONObj
+                            if (values.size() > 1) {
+                                JSONObject secondObj = (JSONObject) values.get(1);
+                                if (secondObj.get("type") != null) {
+                                    String secondType = (String) secondObj.get("type");
+                                    JSONArray secondValues = (JSONArray) secondObj.get("values");
+                                    PreReq<Course> secondPreReq = this.createSinglePreReqCourse(secondValues, secondType);
+                                    preReqList.add(secondPreReq);
+                                }
                             }
+                            PreReq<PreReq> multiPreReq = new PreReq<>(mainType, preReqList);
+                            Course mainCourse = new Course(mainSubject, mainClassId, multiPreReq);
+                            courseMap.put(mainClassId, mainCourse);
                         }
-                        PreReq<PreReq> multiPreReq = new PreReq<>(mainType, preReqList);
-                        Course mainCourse = new Course(mainSubject, mainClassId, multiPreReq);
-                        courseMap.put(mainClassId, mainCourse);
+                        //Multi PreReq
+                        else if (obj.get("values") != null) {
+                            String innerType = (String) obj.get("type");
+                            JSONArray arr = (JSONArray) obj.get("values");
+                            Course mainCourse = this.createMultiPreReqCourse(arr, innerType, mainType, mainSubject, mainClassId);
+                            courseMap.put(mainClassId, mainCourse);
+                        }
                     }
-                    //Multi PreReq
-                    else if (obj.get("values") != null) {
-                        String innerType = (String) obj.get("type");
-                        JSONArray arr = (JSONArray) obj.get("values");
-                        Course mainCourse = this.createMultiPreReqCourse(arr, innerType, mainType, mainSubject, mainClassId);
-                        courseMap.put(mainClassId, mainCourse);
-                    }
+
                 }
             }
         } catch (ParseException e) {
