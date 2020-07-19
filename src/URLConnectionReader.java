@@ -90,13 +90,13 @@ public class URLConnectionReader {
         return newCourse;
     }
 
-    private PreReq<Course>  createNoReqPreReq (JSONObject course) {
+    private PreReq<Course> createNoReqPreReq(JSONObject course) {
         String type = "";
         List<Course> preReqList = new ArrayList<>();
         Course noReqCourse = this.createNoReqCourse(course);
         preReqList.add(noReqCourse);
-        PreReq<Course> preReq = new PreReq<>(type,preReqList);
-        return  preReq;
+        PreReq<Course> preReq = new PreReq<>(type, preReqList);
+        return preReq;
     }
 
     private PreReq<Course> createSinglePreReqCourse(JSONArray values, String type) {
@@ -108,7 +108,7 @@ public class URLConnectionReader {
             preReqCourseList.add(preReqCourse);
         }
         PreReq<Course> preReq = new PreReq<>(type, preReqCourseList);
-       return preReq;
+        return preReq;
     }
 
     private Course createMultiPreReqCourse(JSONArray arr, String innerType, String mainType, String mainSubject, Long mainClassId) {

@@ -32,29 +32,27 @@ public class Course<T> {
             if (!isNoComma) {
                 str.append(",");
             }
-        }
-        else {
+        } else {
             str.append("\n{\n\"subject\": \"" + this.getSubject() + "\", \n");
             str.append("\"classId\": " + this.getClassId() + ", \n");
             PreReq<T> p = this.getPreReq();
             List<T> l = p.getPreReqList();
             for (int i = 0; i < l.size(); i++) {
-              T obj =   l.get(i);
-                if (i != l.size() -1) {
+                T obj = l.get(i);
+                if (i != l.size() - 1) {
                     str.append(obj);
                     str.append(",");
-                }
-                else {
+                } else {
                     str.append(obj);
                 }
-
             }
         }
         return str.toString();
     }
 
     @Override
-    public String toString() {StringBuilder str = new StringBuilder();
+    public String toString() {
+        StringBuilder str = new StringBuilder();
         str.append("\n{\n\"subject\": \"" + this.getSubject() + "\", \n");
         str.append("\"classId\":" + this.getClassId() + ", \n");
         str.append(this.getPreReq() + "");
