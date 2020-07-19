@@ -46,23 +46,13 @@ public class PreReq<T> {
             for (PreReq preReq : courseList) {
                 str.append(preReq.toString());
             }
-//            for(int i = 0; i < courseList.size(); i++) {
-//                PreReq course = courseList.get(i);
-//                List<Course> c = course.getPreReqList();
-//                for(Course cr: c) {
-//                    if (i != courseList.size() - 1) {
-//                        str.append(cr.toJSONString(true, false));
-//                    }
-//                    else {
-//                        str.append(cr.toJSONString(true, true));
-//                    }
-//                }
-//
-//            }
-//            str.append("GAH");
             int len = str.length();
-//        str.deleteCharAt(len);
-            str.append( "]\n} \n}");
+            char checkComma = str.charAt(len-1);
+            if (checkComma == ',') {
+                str.deleteCharAt(len-1);
+            }
+
+            str.append( "]\n} \n},");
         }
         return str.toString();
     }

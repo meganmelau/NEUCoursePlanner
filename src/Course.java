@@ -56,7 +56,7 @@ public class Course<T> {
     @Override
     public String toString() {StringBuilder str = new StringBuilder();
         str.append("\n{\n\"subject\": \"" + this.getSubject() + "\", \n");
-        str.append("\"classId\":\"" + this.getClassId() + "\", \n");
+        str.append("\"classId\":" + this.getClassId() + ", \n");
         str.append(this.getPreReq() + "");
 
         return str.toString();
