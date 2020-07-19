@@ -5,7 +5,6 @@ import org.json.simple.parser.ParseException;
 
 import java.net.*;
 import java.io.*;
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class URLConnectionReader {
