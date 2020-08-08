@@ -1,4 +1,6 @@
 # NEUCoursePlanner
+Call Api to get list of possible classes and program sorts the list of classes in order to graduate for a Northeastern student. 
+
 Run Main.main()
 
 Work for 
@@ -54,4 +56,4 @@ Work for
  }"
  
  Has issues converting to JSON.
- The map, PLan, is sorted per criteria.
+ The map, Plan, is sorted per criteria.
